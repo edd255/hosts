@@ -46,3 +46,31 @@ sed -i 's/^/0\.0\.0\.0 /' temp
 cat temp >> hosts
 rm instances.json
 rm temp
+
+wget https://api.invidious.io/instances.json
+jq ".[] | .[0]" instances.json >> temp
+sed -i 's/"//g' temp
+sed -i 's/null//g' temp
+sed -i 's/  //g' temp
+sed -i 's/\t//g' temp
+sed -i "s/https:\/\///g" temp
+sed -i "s/\///g" temp
+sed -i '/^[[:blank:]]*$/ d' temp
+sed -i 's/^/0\.0\.0\.0 /' temp
+cat temp >> hosts
+rm instances.json
+rm temp
+
+wget https://raw.githubusercontent.com/xnaas/nitter-instances/master/.upptimerc.yml
+yq ".sites | .[] | .name" .upptimerc.yml >> temp
+sed -i 's/"//g' temp
+sed -i 's/null//g' temp
+sed -i 's/  //g' temp
+sed -i 's/\t//g' temp
+sed -i "s/https:\/\///g" temp
+sed -i "s/\///g" temp
+sed -i '/^[[:blank:]]*$/ d' temp
+sed -i 's/^/0\.0\.0\.0 /' temp
+cat temp >> hosts
+rm .upptimerc.yml
+rm temp
