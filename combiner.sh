@@ -2,7 +2,7 @@
 
 urls=(
     "https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews-gambling-porn-social/hosts"
-    "https://hosts.oisd.nl/"
+    "https://o0.pages.dev/Xtra/hosts.txt"
 )
 
 touch hosts
