@@ -1,14 +1,19 @@
 import urllib.request
+import urllib.error
 from pwn import log
 import os
 import re
 
 HOSTS = {
     "StevenBlack": "https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews-gambling-porn-social/hosts",
-    "Xtra": "https://badmojr.github.io/1Hosts/Xtra/hosts.txt",
+    "1Hosts": "https://badmojr.github.io/1Hosts/Lite/hosts.txt",
 }
 
-LEECHERS = {"blog.fefe.de", "lobste.rs", "news.ycombinator.com"}
+LLMS = {
+    "ChatGPT": "chatgpt.com",
+    "Claude": "claude.ai",
+    "Gemini": "gemini.google.com",
+}
 
 
 def remove_duplicates(in_file: str, out_file: str) -> None:
@@ -40,7 +45,10 @@ def cleanup_hosts(file: str):
         lines = fd.readlines()
     processed_lines = []
     for line in lines:
-        line = re.match(r"^[^#]*", line).group(0) if line.strip() else ""
+        match = re.match(r"^[^#]*", line)
+        if match is None:
+            continue
+        line = match.group(0) if line.strip() else ""
         line = line.replace("  ", "").replace("\n", "")
         if line.strip():
             processed_lines.append(f"{line}\n")
@@ -49,9 +57,10 @@ def cleanup_hosts(file: str):
     log.success(f"Processed 'hosts' file: {file}")
 
 
-def add_leechers(urls: dict[str], file: str) -> None:
+def add_llms(urls: dict[str, str], file: str) -> None:
     with open(file, "a") as fd:
-        for url in urls:
+        for name, url in urls.items():
+            log.success(f"Processed '{name}'.")
             fd.write(f"0.0.0.0 {url}\n")
 
 
@@ -60,7 +69,7 @@ def main() -> None:
     cleanup_hosts("tmp")
     remove_duplicates("tmp", "hosts")
     os.remove("tmp")
-    add_leechers(LEECHERS, "hosts")
+    add_llms(LLMS, "hosts")
 
 
 if __name__ == "__main__":
